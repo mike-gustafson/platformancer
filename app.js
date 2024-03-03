@@ -6,6 +6,7 @@ import { addPoints } from './js/addPoints.js';
 import { movePlayer } from './js/movePlayer.js';
 import { createClouds } from './js/createClouds.js';
 import { createTriangles } from './js/createTriangles.js';
+import { drawClouds } from './js/drawClouds.js';
 
 // class imports
 import { Menu } from './js/classes/menu.js';
@@ -163,7 +164,7 @@ addEventListener('keyup', ({ keyCode }) => {
 const loop = function() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawTriangles();
-    drawClouds();
+    drawClouds(clouds, player, context, levelWidth, innerWidth);
     player.update(gravity, context);
     levelExit.update(context, player, levelWidth, innerWidth);
     drawScore();
@@ -191,11 +192,8 @@ function isPlayerAtEndOfLevel() {
         player.position.y + player.height >= levelExit.initialPosition.y &&
         player.position.y <= levelExit.initialPosition.y + levelExit.height
     ) {
-        levelOver()
+        gameOver()
     }
-}
-function levelOver() {
-    gameOver()
 }
 function findLastPlatformY() {
     let highestY = -1;
@@ -235,10 +233,7 @@ function gameOver() {
     finalScoreText.textContent = `${scoreTotal}`
     isMenuDisplayed = true
 }
-function resetScores() {
-    scoreThisLife = 0;
-    scoreTotal = 0
-}
+
 function menuStartGame() {
     createGameAssets()
     menuMain.hide();
@@ -246,7 +241,8 @@ function menuStartGame() {
     isMenuDisplayed = false
     displayMenuImage = false
     musicMenu.pause()
-    resetScores()
+    scoreThisLife = 0;
+    scoreTotal = 0
     endPortalY = findLastPlatformY()
     playerLives = playerStartingLives
     levelExit = new LevelExit(levelWidth - 40, 300, 40, 100);
@@ -361,29 +357,6 @@ function drawTriangles() {
     }
 } 
 
-function drawClouds() {    
-    for (let i = 0; i < clouds.length; i++){
-        if (
-            (player.position.x <= 100 && player.inLevelXPosition.x >= 100) ||
-            (player.inLevelXPosition.x < levelWidth && player.position.x >= innerWidth / 2)
-        ) {
-            if (player.velocity.x !== 0) {
-            clouds[i].x -= player.velocity.x/4;
-        }
-    }
-        context.beginPath();
-        context.arc(clouds[i].x, clouds[i].y, 60, Math.PI * 0.5, Math.PI * 1.5);
-        context.arc(clouds[i].x + 70, clouds[i].y - 60, 70, Math.PI * 1, Math.PI * 1.85);
-        context.arc(clouds[i].x + 152, clouds[i].y - 45, 50, Math.PI * 1.37, Math.PI * 1.91);
-        context.arc(clouds[i].x + 200, clouds[i].y, 60, Math.PI * 1.5, Math.PI * 0.5);
-        context.moveTo(clouds[i].x + 200, clouds[i].y + 60);
-        context.lineTo(clouds[i].x, clouds[i].y + 60);
-        context.strokeStyle = '#797874';
-        context.stroke();
-        context.fillStyle = '#ffffff';
-        context.fill();
-    }
-}
 function showMenu(requestedMenu) {
     allMenus.forEach(menu => menu.hide());
     requestedMenu.show();
