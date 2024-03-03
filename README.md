@@ -16,9 +16,7 @@ This project showcases the abilities of HTML5 canvas and JavaScript.  The JavaSc
 ![Alt text](image.png)
 ## Technologies Used:
 
-### HTML5
-### JavaScript
-### CSS
+### HTML5 | JavaScript | CSS
 
 ## Installation Instructions:
 - open your terminal and navigate to the folder you want  the project located in.
