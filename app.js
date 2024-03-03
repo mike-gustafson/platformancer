@@ -14,6 +14,7 @@ import { drawTriangles } from './js/drawTriangles.js';
 import { drawPlayerLives } from './js/drawPlayerLives.js';
 
 // collision detection imports
+import { isPlayerOnTheGround } from './js/collisionDetection/isPlayerOnTheGround.js';
 import { isPlayerAtEndOfLevel } from './js/collisionDetection/isPlayerAtEndOfLevel.js';
 import { keepPlayerOnTheScreen } from './js/collisionDetection/keepPlayerOnTheScreen.js';
 
@@ -190,7 +191,7 @@ const loop = function() {
 
     // collision detection
     isPlayerOnAPlatform();
-    isPlayerOnTheGround();
+    isPlayerOnTheGround(player, canvas) ? playerDied() : null;
     isPlayerAtEndOfLevel(player, levelExit) ? gameOver() : null;
 
     // move player
@@ -222,6 +223,23 @@ function generatePlatforms() {
     levelExitPlatform.width = 150;
     initialPlatformData.push(levelExitPlatform);
     return initialPlatformData;
+}
+
+function playerDied() {
+    if (playerLives > 0) {
+        playerLives--;
+        player.position.x = playerStartingXPosition;
+        player.position.y = 20;
+        player.velocity.y = 0;
+        player.velocity.x = 0;
+        player.jumping = false;
+        player.inLevelXPosition.x = playerStartingXPosition;
+        levelExit.position.x = levelExit.initialPosition.x
+        scoreThisLife=0
+        platforms = generatePlatforms();
+    } else if (playerLives===0){
+        gameOver()
+    }
 }
 
 function gameOver() {
@@ -276,24 +294,7 @@ function isPlayerOnAPlatform() {
     }
     return false;
 }
-function isPlayerOnTheGround() {
-    if (player.position.y +player.height >= canvas.height) {
-        if (playerLives > 0) {
-            playerLives--;
-            player.position.x = playerStartingXPosition;
-            player.position.y = 20;
-            player.velocity.y = 0;
-            player.velocity.x = 0;
-            player.jumping = false;
-            player.inLevelXPosition.x = playerStartingXPosition;
-            levelExit.position.x = levelExit.initialPosition.x
-            scoreThisLife=0
-            platforms = generatePlatforms();
-        } else if (playerLives===0){
-            gameOver()
-        }
-    }
-}
+
 function createGameAssets() {
     player = new Player
     playerStartingXPosition = player.position.x
