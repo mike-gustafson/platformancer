@@ -3,6 +3,7 @@ import level01Platforms from './levels/level-01.js';
 
 // function imports
 import { addPoints } from './js/addPoints.js';
+import { movePlayer } from './js/movePlayer.js';
 
 let levelExit;
 let trianglesCurrentPosition = 0;
@@ -92,6 +93,7 @@ const backgroundMusic = new Audio('sounds/Kirill_Kharchenko_-_Background_Hip-Hop
 menuShowWelcome();
 
 // Physics Variables
+let speed = 5;
 let friction = .7;
 let gravity = 1.3;
 let keys = {
@@ -252,7 +254,7 @@ const loop = function() {
     isPlayerOnAPlatform();
     isPlayerOnTheGround();
     isPlayerAtEndOfLevel();
-    movePlayer();
+    player = movePlayer(player, keys, speed, friction)
     keepPlayerOnTheScreen();
     if (isMenuDisplayed) {
         return;
@@ -355,13 +357,11 @@ function isPlayerOnAPlatform() {
             }
             player.position.y = platform.position.y - player.height;
             player.velocity.y = 0
-            
             let addPointsResults = addPoints(platform, scoredPlatforms, scoreTotal, scoreThisLife);
             scoredPlatforms = addPointsResults.scoredPlatforms;
             scoreTotal = addPointsResults.scoreTotal;
             scoreThisLife = addPointsResults.scoreThisLife;
-
-                        return true;
+            return true;
         }
     }
     return false;
@@ -400,16 +400,7 @@ function keepPlayerOnTheScreen() {
         player.position.x = innerWidth/2 
     }
 }
-function movePlayer () {
-    if (keys.left.pressed) {
-        player.velocity.x = -5
-    } else if (keys.right.pressed) {
-        player.velocity.x = 5    
-    } else {
-        player.velocity.x = player.velocity.x * friction
-    }
-    player.position.x += player.velocity.x;
-}
+
 function createGameAssets() {
     player = new Player
     playerStartingXPosition = player.position.x
