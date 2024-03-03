@@ -16,6 +16,9 @@ import { drawPlayerLives } from './js/drawPlayerLives.js';
 // collision detection imports
 import { isPlayerAtEndOfLevel } from './js/collisionDetection/isPlayerAtEndOfLevel.js';
 
+// level exit imports
+import { findLastPlatformY } from './js/findLastPlatformY.js';
+
 // class imports
 import { Menu } from './js/classes/menu.js';
 import { Player } from './js/classes/player.js';
@@ -69,10 +72,9 @@ let platforms;
 let levelWidth = 10000;
 let scoredPlatforms = new Set();
 
-let endOfLevel = levelWidth;
-let endPortalX = levelWidth - 48;
+let endPortalX = levelWidth;
 let endPortalY;
-let endPortalWidth = 48;
+let endPortalWidth = 40;
 let endPortalHeight = 100;
 
 // Sounds
@@ -206,16 +208,6 @@ const loop = function() {
 
 // FUNCTIONS --------------------------------------------------------------------------
 
-
-function findLastPlatformY() {
-    let highestY = -1;
-    platforms.forEach(platform => {
-        if (platform.position.x > levelWidth) {
-            highestY = platform.position.y;
-        }
-    });
-    return highestY;
-}
 function generatePlatforms() {
     let initialPlatformData = level01Platforms.map((platformData) => {
         let platform = new Platform(levelWidth, innerHeight);
@@ -255,9 +247,7 @@ function menuStartGame() {
     musicMenu.pause()
     scoreThisLife = 0;
     scoreTotal = 0
-    endPortalY = findLastPlatformY()
     playerLives = playerStartingLives
-    levelExit = new LevelExit(levelWidth - 40, 300, 40, 100);
     backgroundMusic.play();
     window.requestAnimationFrame(loop)
 }
@@ -325,7 +315,8 @@ function createGameAssets() {
     player = new Player
     playerStartingXPosition = player.position.x
     platforms = generatePlatforms();
-    levelExit = new LevelExit(levelWidth - 40, 300, 40, 100);
+    endPortalY = findLastPlatformY(platforms, endPortalHeight)
+    levelExit = new LevelExit(endPortalX, endPortalY, endPortalWidth, endPortalHeight);
     triangles = createTriangles(levelWidth, trianglePeakMinHeight, trianglePeakMaxHeight, trianglesCurrentPosition);
     clouds = createClouds(levelWidth, clouds)
     player.create(context)
