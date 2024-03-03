@@ -1,6 +1,6 @@
 // level-01.js
 
-const level01Platforms = [
+const level1Platforms = [
     {x: 0,   y: 100,width: 300},
     {x: 400, y:  50,width: 100},
     {x: 550, y:  75,width:  50},
@@ -52,4 +52,4 @@ const level01Platforms = [
     {x: 9450,y:   0,width:1000},
 ];
 
-export default level01Platforms;
+export default level1Platforms;

@@ -1,11 +1,10 @@
-// level imports
-import level01Platforms from './levels/level-01.js';
-
 // function imports
 import { addPoints } from './js/addPoints.js';
 import { movePlayer } from './js/movePlayer.js';
+import { playerDied } from './js/playerDied.js';
 import { createClouds } from './js/createClouds.js';
 import { createTriangles } from './js/createTriangles.js';
+import { generatePlatforms } from './js/generatePlatforms.js';
 
 // rendering imports
 import { drawScore } from './js/drawScore.js';
@@ -24,7 +23,6 @@ import { findLastPlatformY } from './js/findLastPlatformY.js';
 // class imports
 import { Menu } from './js/classes/menu.js';
 import { Player } from './js/classes/player.js';
-import { Platform } from './js/classes/platform.js';
 import { LevelExit } from './js/classes/levelExit.js';
 
 let trianglesCurrentPosition = 0;
@@ -33,6 +31,7 @@ let trianglePeakMinHeight = innerHeight/1.5;
 let levelExit
 let triangles = [];
 let clouds = [];
+let level = 1
 
 // canvas setup
 const canvas = document.querySelector('canvas');
@@ -191,7 +190,7 @@ const loop = function() {
 
     // collision detection
     isPlayerOnAPlatform();
-    isPlayerOnTheGround(player, canvas) ? playerDied() : null;
+    isPlayerOnTheGround(player, canvas) ? playerDied(playerLives) ? startLevel() : gameOver() : null;
     isPlayerAtEndOfLevel(player, levelExit) ? gameOver() : null;
 
     // move player
@@ -209,24 +208,10 @@ const loop = function() {
 
 // FUNCTIONS --------------------------------------------------------------------------
 
-function generatePlatforms() {
-    let initialPlatformData = level01Platforms.map((platformData) => {
-        let platform = new Platform(levelWidth, innerHeight);
-        platform.position.x = platformData.x;
-        platform.position.y = innerHeight/2 + platformData.y;
-        platform.width = platformData.width;
-        return platform;
-    });
-    const levelExitPlatform = new Platform();
-    levelExitPlatform.position.x = levelWidth - 40; // Position it at levelWidth - 40
-    levelExitPlatform.position.y = 400;
-    levelExitPlatform.width = 150;
-    initialPlatformData.push(levelExitPlatform);
-    return initialPlatformData;
-}
-
-function playerDied() {
-    if (playerLives > 0) {
+function startLevel() {
+    if (playerLives === 0) {
+        gameOver()
+    } else {
         playerLives--;
         player.position.x = playerStartingXPosition;
         player.position.y = 20;
@@ -236,9 +221,8 @@ function playerDied() {
         player.inLevelXPosition.x = playerStartingXPosition;
         levelExit.position.x = levelExit.initialPosition.x
         scoreThisLife=0
-        platforms = generatePlatforms();
-    } else if (playerLives===0){
-        gameOver()
+        platforms = generatePlatforms(level, innerHeight, levelWidth);
+        backgroundMusic.play()
     }
 }
 
@@ -298,7 +282,7 @@ function isPlayerOnAPlatform() {
 function createGameAssets() {
     player = new Player
     playerStartingXPosition = player.position.x
-    platforms = generatePlatforms();
+    platforms = generatePlatforms(level, innerHeight, levelWidth);
     let endPortalY = findLastPlatformY(platforms, endPortalHeight)
     levelExit = new LevelExit(endPortalX, endPortalY, endPortalWidth, endPortalHeight);
     triangles = createTriangles(levelWidth, trianglePeakMinHeight, trianglePeakMaxHeight, trianglesCurrentPosition);
