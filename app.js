@@ -8,6 +8,7 @@ import { movePlayer } from './js/movePlayer.js';
 // class imports
 import { Menu } from './js/classes/menu.js';
 import { Player } from './js/classes/player.js';
+import { Platform } from './js/classes/platform.js';
 
 let levelExit;
 let trianglesCurrentPosition = 0;
@@ -105,35 +106,6 @@ let keys = {
     }
 }
 
-// platform constructor
-class Platform {
-    constructor() {
-        this.height = 15
-        this.width = random(100,500)
-        this.position = {
-            x: Math.floor(Math.random() * levelWidth-this.width),
-            y: Math.floor((Math.random() * (innerHeight*.75)+(innerHeight/4)-30)),
-        }
-        this.isExitPlatform = false;
-    }
-    create() {
-        context.fillStyle = '#565656'
-        context.fillRect(this.position.x, this.position.y, this.width, this.height)
-    }
-    update() {
-        this.create()
-        this.position.x = Math.round(this.position.x);
-
-        if (
-            (player.position.x <= 100 && player.inLevelXPosition.x >= 100) ||
-            (player.inLevelXPosition.x < levelWidth && player.position.x >= innerWidth / 2)
-        ) {
-            if (player.velocity.x !== 0){
-                this.position.x -= player.velocity.x;
-            }
-        }
-    }
-}   
 class LevelExit {
     constructor(x, y, width, height) {
         this.initialPosition = { x, y };
@@ -217,7 +189,7 @@ const loop = function() {
     levelExit.update();
     drawScore();
     platforms.forEach(platform => {
-        platform.update();
+        platform.update(context, player, levelWidth);
     })
     drawPlayerLives();
     isPlayerOnAPlatform();
@@ -259,7 +231,7 @@ function findLastPlatformY() {
 }
 function generatePlatforms() {
     let initialPlatformData = level01Platforms.map((platformData) => {
-        let platform = new Platform();
+        let platform = new Platform(levelWidth, innerHeight);
         platform.position.x = platformData.x;
         platform.position.y = innerHeight/2 + platformData.y;
         platform.width = platformData.width;
