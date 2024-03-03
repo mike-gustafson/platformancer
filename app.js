@@ -13,6 +13,9 @@ import { drawClouds } from './js/drawClouds.js';
 import { drawTriangles } from './js/drawTriangles.js';
 import { drawPlayerLives } from './js/drawPlayerLives.js';
 
+// collision detection imports
+import { isPlayerAtEndOfLevel } from './js/collisionDetection/isPlayerAtEndOfLevel.js';
+
 // class imports
 import { Menu } from './js/classes/menu.js';
 import { Player } from './js/classes/player.js';
@@ -167,39 +170,43 @@ addEventListener('keyup', ({ keyCode }) => {
 
 // GAME LOOP -------------------------------------------------------------------------
 const loop = function() {
+    // clear screen
     context.clearRect(0, 0, canvas.width, canvas.height);
-    drawTriangles(triangles, context, player, levelWidth, innerWidth, innerHeight);
+
+    // render elemnts
+    drawPlayerLives(playerLives, context);
     drawClouds(clouds, player, context, levelWidth, innerWidth);
+    drawScore(context, scoreTotal, scoreThisLife, scorePositionX, scorePositionY);
+    drawTriangles(triangles, context, player, levelWidth, innerWidth, innerHeight);
+
+    // update elements
     player.update(gravity, context);
     levelExit.update(context, player, levelWidth, innerWidth);
-    drawScore(context, scoreTotal, scoreThisLife, scorePositionX, scorePositionY);
     platforms.forEach(platform => {
         platform.update(context, player, levelWidth);
     })
-    drawPlayerLives(playerLives, context);
+
+    // collision detection
     isPlayerOnAPlatform();
     isPlayerOnTheGround();
-    isPlayerAtEndOfLevel();
+    isPlayerAtEndOfLevel(player, levelExit) ? gameOver() : null;
+
+    // move player
     player = movePlayer(player, keys, speed, friction)
     keepPlayerOnTheScreen();
+
+    // check if menu is displayed
     if (isMenuDisplayed) {
         return;
     }
+
+    // request next frame
     requestAnimationFrame(loop); 
 }
 
 // FUNCTIONS --------------------------------------------------------------------------
 
-function isPlayerAtEndOfLevel() {
-    if (
-        player.inLevelXPosition.x >= levelExit.initialPosition.x &&
-        player.inLevelXPosition.x <= levelExit.initialPosition.x + levelExit.width &&
-        player.position.y + player.height >= levelExit.initialPosition.y &&
-        player.position.y <= levelExit.initialPosition.y + levelExit.height
-    ) {
-        gameOver()
-    }
-}
+
 function findLastPlatformY() {
     let highestY = -1;
     platforms.forEach(platform => {
