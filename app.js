@@ -2,6 +2,7 @@
 import level01Platforms from './levels/level-01.js';
 
 // function imports
+import { random } from './js/utils.js';
 import { addPoints } from './js/addPoints.js';
 import { movePlayer } from './js/movePlayer.js';
 
@@ -174,9 +175,7 @@ const loop = function() {
 }
 
 // FUNCTIONS --------------------------------------------------------------------------
-function random(min,max){
-    return Math.floor(Math.random() * (max-min + 1) + min)
-}
+
 function isPlayerAtEndOfLevel() {
     if (
         player.inLevelXPosition.x >= levelExit.initialPosition.x &&

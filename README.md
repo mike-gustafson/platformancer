@@ -1,6 +1,12 @@
-# Platform Jumper
+# Platformancer
+
+### A JavaScript an HTML Canvas based platformer game
 
 ## Play it right now on GitHub Pages!
+
+## Controls
+
+User the left and right arrow keys on your weyboard to move left and right.  The spacebar will make you jump. 
 
 https://mike-gustafson.github.io/platformancer/
 
