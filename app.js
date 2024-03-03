@@ -219,7 +219,7 @@ function gameOver() {
     soundGameOver.play()
     menuShow();
     menuHideMain()
-    gameOverMenu.style.display = 'flex';
+    menuGameOver.show();
     finalScoreText.textContent = `${scoreTotal}`
     isMenuDisplayed = true
 }
@@ -373,7 +373,7 @@ function drawClouds() {
     }
 }
 function menuShow() {
-    menuContainer.style.display = 'flex';
+    menuContainer.show();
     isMenuDisplayed = true
     musicMenu.play()
     menuShowMain()
