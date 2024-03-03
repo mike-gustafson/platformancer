@@ -7,7 +7,7 @@ import { movePlayer } from './js/movePlayer.js';
 import { createClouds } from './js/createClouds.js';
 import { createTriangles } from './js/createTriangles.js';
 import { drawClouds } from './js/drawClouds.js';
-
+import { drawScore } from './js/drawScore.js';
 // class imports
 import { Menu } from './js/classes/menu.js';
 import { Player } from './js/classes/player.js';
@@ -167,7 +167,7 @@ const loop = function() {
     drawClouds(clouds, player, context, levelWidth, innerWidth);
     player.update(gravity, context);
     levelExit.update(context, player, levelWidth, innerWidth);
-    drawScore();
+    drawScore(context, scoreTotal, scoreThisLife, scorePositionX, scorePositionY);
     platforms.forEach(platform => {
         platform.update(context, player, levelWidth);
     })
@@ -248,13 +248,6 @@ function menuStartGame() {
     levelExit = new LevelExit(levelWidth - 40, 300, 40, 100);
     backgroundMusic.play();
     window.requestAnimationFrame(loop)
-}
-function drawScore() {
-    context.fillStyle = 'black';
-    context.font = '32px Arial';
-    context.textAlign = 'center';
-    context.fillText(`Total Score:  ${scoreTotal}`, scorePositionX, scorePositionY);
-    context.fillText(`This Life:  ${scoreThisLife}`, scorePositionX, scorePositionY+32);
 }
 function drawPlayerLives() {
     for (let i = 0; i < playerLives; i++) {
