@@ -2,7 +2,6 @@
 import level01Platforms from './levels/level-01.js';
 
 // function imports
-import { random } from './js/utils.js';
 import { addPoints } from './js/addPoints.js';
 import { movePlayer } from './js/movePlayer.js';
 import { createClouds } from './js/createClouds.js';
@@ -20,8 +19,6 @@ let trianglePeakMinHeight = innerHeight/1.5;
 let levelExit
 let triangles = [];
 let clouds = [];
-let cloudX = 0;
-let cloudY = 200;
 
 // canvas setup
 const canvas = document.querySelector('canvas');
@@ -86,13 +83,15 @@ const menuLevelSelect = new Menu('level-select-menu');
 const menuInstructions = new Menu('instructions-menu');
 const menuTechnicalInfo = new Menu('technical-info-menu');
 
+const allMenus = [menuMain, menuWelcome, menuOptions, menuCredits, menuGameOver, menuLevelSelect, menuInstructions, menuTechnicalInfo];
+
 startButton.addEventListener('click', menuStartGame);
 restartButton.addEventListener('click', menuStartGame);
-menuNavToOptions.addEventListener('click', menuShowOptions);
-menuNavToCredits.addEventListener('click', menuShowCredits);
-menuNavToLevelSelect.addEventListener('click', menuShowLevelSelect);
-menuNavToInstructions.addEventListener('click', menuShowInstructions);
-menuNavToTechnicalInfo.addEventListener('click', menuShowTechnicalInfo);
+menuNavToOptions.addEventListener('click', () => showMenu(menuOptions));
+menuNavToCredits.addEventListener('click', () => showMenu(menuCredits));
+menuNavToLevelSelect.addEventListener('click', () => showMenu(menuLevelSelect));
+menuNavToInstructions.addEventListener('click', () => showMenu(menuInstructions));
+menuNavToTechnicalInfo.addEventListener('click', () => showMenu(menuTechnicalInfo));
 menuWelcome.show();
 // Physics Variables
 let speed = 5;
@@ -112,7 +111,16 @@ onload = function() {
     for(var i = 0; i < menuNavToMain.length; i++) {
         let eachOne = menuNavToMain[i];
         eachOne.onclick = function() {
-            menuShowMain();
+            menuCredits.hide();
+            menuInstructions.hide();
+            menuLevelSelect.hide();
+            menuOptions.hide();
+            menuTechnicalInfo.hide();
+            menuGameOver.hide();
+            if (displayMenuImage) {
+                menuImage.style.display = 'flex'
+            }
+            menuMain.show();
         }
     }
 }
@@ -217,14 +225,18 @@ function generatePlatforms() {
 function gameOver() {
     backgroundMusic.pause()
     soundGameOver.play()
-    menuShow();
-    menuHideMain()
-    menuGameOver.show();
+    menuContainer.show();
+    showMenu(menuGameOver);
+    isMenuDisplayed = true
+    musicMenu.play()
+    if (displayMenuImage) {
+        menuImage.style.display = 'flex'
+    }
     finalScoreText.textContent = `${scoreTotal}`
     isMenuDisplayed = true
 }
 function resetScores() {
-    scoreThisLife = 0
+    scoreThisLife = 0;
     scoreTotal = 0
 }
 function menuStartGame() {
@@ -372,45 +384,7 @@ function drawClouds() {
         context.fill();
     }
 }
-function menuShow() {
-    menuContainer.show();
-    isMenuDisplayed = true
-    musicMenu.play()
-    menuShowMain()
-    
-}
-function menuShowMain() {
-    menuCredits.hide();
-    menuInstructions.hide();
-    menuLevelSelect.hide();
-    menuOptions.hide();
-    menuTechnicalInfo.hide();
-    menuGameOver.hide();
-    if (displayMenuImage) {
-        menuImage.style.display = 'flex'
-    }
-    menuMain.show();
-}
-function menuHideMain() {
-    menuMain.hide();
-}
-function menuShowInstructions() {
-    menuMain.hide();
-    menuInstructions.show();
-}
-function menuShowOptions() {
-    menuMain.hide();
-    menuOptions.show();
-}
-function menuShowLevelSelect() {
-    menuMain.hide();
-    menuLevelSelect.show();
-}
-function menuShowCredits() {
-    menuMain.hide();
-    menuCredits.show();
-}
-function menuShowTechnicalInfo() {
-    menuMain.hide();
-    menuTechnicalInfo.show();
+function showMenu(requestedMenu) {
+    allMenus.forEach(menu => menu.hide());
+    requestedMenu.show();
 }
