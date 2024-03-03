@@ -6,9 +6,13 @@ import { addPoints } from './js/addPoints.js';
 import { movePlayer } from './js/movePlayer.js';
 import { createClouds } from './js/createClouds.js';
 import { createTriangles } from './js/createTriangles.js';
-import { drawClouds } from './js/drawClouds.js';
-import { drawPlayerLives } from './js/drawPlayerLives.js';
+
+// rendering imports
 import { drawScore } from './js/drawScore.js';
+import { drawClouds } from './js/drawClouds.js';
+import { drawTriangles } from './js/drawTriangles.js';
+import { drawPlayerLives } from './js/drawPlayerLives.js';
+
 // class imports
 import { Menu } from './js/classes/menu.js';
 import { Player } from './js/classes/player.js';
@@ -164,7 +168,7 @@ addEventListener('keyup', ({ keyCode }) => {
 // GAME LOOP -------------------------------------------------------------------------
 const loop = function() {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    drawTriangles();
+    drawTriangles(triangles, context, player, levelWidth, innerWidth, innerHeight);
     drawClouds(clouds, player, context, levelWidth, innerWidth);
     player.update(gravity, context);
     levelExit.update(context, player, levelWidth, innerWidth);
@@ -319,30 +323,6 @@ function createGameAssets() {
     clouds = createClouds(levelWidth, clouds)
     player.create(context)
 }
-function drawTriangles() {
-    for (let i = 0; i < triangles.length; i++) {        
-        if (
-            (player.position.x <= 100 && player.inLevelXPosition.x >= 100) ||
-            (player.inLevelXPosition.x < levelWidth && player.position.x >= innerWidth / 2)
-        ) {
-            if (player.velocity.x !== 0) {
-                triangles[i].a -= player.velocity.x/16;
-                triangles[i].b -= player.velocity.x/16;
-                triangles[i].cXOffset -= player.velocity.x/16;
-            }
-        }
-        context.beginPath();
-        context.moveTo(triangles[i].a, innerHeight);
-        context.lineTo(triangles[i].b, innerHeight);
-        context.lineTo(triangles[i].cXOffset, innerHeight - triangles[i].c);
-        context.closePath();
-        context.lineWidth = 5;
-        context.strokeStyle = '#666666';
-        context.stroke();
-        context.fillStyle = "#b1a849";
-        context.fill();
-    }
-} 
 
 function showMenu(requestedMenu) {
     allMenus.forEach(menu => menu.hide());
