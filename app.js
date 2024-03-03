@@ -5,6 +5,9 @@ import level01Platforms from './levels/level-01.js';
 import { addPoints } from './js/addPoints.js';
 import { movePlayer } from './js/movePlayer.js';
 
+// class imports
+import { Menu } from './js/classes/menu.js';
+
 let levelExit;
 let trianglesCurrentPosition = 0;
 let triangles = [];
@@ -28,16 +31,8 @@ let isMenuDisplayed = true;
 let displayMenuImage = true;
 
 const menuImage = document.getElementById('image');
-const menuMain = document.getElementById('start-menu');
-const menuWelcome = document.getElementById('welcome-menu');
-const menuOptions = document.getElementById('options-menu');
-const menuCredits = document.getElementById('credits-menu');
-const menuContainer = document.getElementById('menu-container');
 const menuNavToOptions = document.getElementById('nav-to-options');
 const menuNavToCredits = document.getElementById('nav-to-credits');
-const menuLevelSelect = document.getElementById('level-select-menu');
-const menuInstructions = document.getElementById('instructions-menu');
-const menuTechnicalInfo = document.getElementById('technical-info-menu');
 const menuNavToLevelSelect = document.getElementById('nav-to-level-select');
 const menuNavToInstructions = document.getElementById('nav-to-instructions');
 const menuNavToMain = document.getElementsByClassName('navigate-to-main-menu');
@@ -45,16 +40,8 @@ const menuNavToTechnicalInfo = document.getElementById('nav-to-technical-info');
 
 const startButton = document.getElementById('start-button');
 const finalScoreText = document.getElementById('final-score');
-const gameOverMenu = document.getElementById('game-over-menu');
 const restartButton = document.getElementById('restart-button');
 
-startButton.addEventListener('click', menuStartGame);
-restartButton.addEventListener('click', menuStartGame);
-menuNavToOptions.addEventListener('click', menuShowOptions);
-menuNavToCredits.addEventListener('click', menuShowCredits);
-menuNavToLevelSelect.addEventListener('click', menuShowLevelSelect);
-menuNavToInstructions.addEventListener('click', menuShowInstructions);
-menuNavToTechnicalInfo.addEventListener('click', menuShowTechnicalInfo);
 
 
 
@@ -89,9 +76,24 @@ const soundPlayerJumping = new Audio('sounds/399095__plasterbrain__8bit-jump.wav
 const soundGameOver = new Audio('sounds/362204__taranp__horn_fail_wahwah_3.wav');
 const backgroundMusic = new Audio('sounds/Kirill_Kharchenko_-_Background_Hip-Hop_Funk.mp3');
 
+const menuMain = new Menu('start-menu');
+const menuWelcome = new Menu('welcome-menu');
+const menuOptions = new Menu('options-menu');
+const menuCredits = new Menu('credits-menu');
+const menuGameOver = new Menu('game-over-menu');
+const menuContainer = new Menu('menu-container');
+const menuLevelSelect = new Menu('level-select-menu');
+const menuInstructions = new Menu('instructions-menu');
+const menuTechnicalInfo = new Menu('technical-info-menu');
 
-menuShowWelcome();
-
+startButton.addEventListener('click', menuStartGame);
+restartButton.addEventListener('click', menuStartGame);
+menuNavToOptions.addEventListener('click', menuShowOptions);
+menuNavToCredits.addEventListener('click', menuShowCredits);
+menuNavToLevelSelect.addEventListener('click', menuShowLevelSelect);
+menuNavToInstructions.addEventListener('click', menuShowInstructions);
+menuNavToTechnicalInfo.addEventListener('click', menuShowTechnicalInfo);
+menuWelcome.show();
 // Physics Variables
 let speed = 5;
 let friction = .7;
@@ -319,7 +321,11 @@ function resetScores() {
 }
 function menuStartGame() {
     createGameAssets()
-    menuHide()
+    menuMain.hide();
+    menuContainer.hide();
+    isMenuDisplayed = false
+    displayMenuImage = false
+    musicMenu.pause()
     resetScores()
     endPortalY = findLastPlatformY()
     playerLives = playerStartingLives
@@ -486,81 +492,42 @@ function drawClouds() {
 function menuShow() {
     menuContainer.style.display = 'flex';
     isMenuDisplayed = true
-    console.log('play music')
     musicMenu.play()
     menuShowMain()
     
 }
-function menuHide() {
-    menuContainer.style.display = 'none';
-    isMenuDisplayed = false
-    console.log('pause music')
-    musicMenu.pause()
-    if (displayMenuImage) {
-        menuImage.style.display = 'none'
-        displayMenuImage = false
-    }
-}
 function menuShowMain() {
-    menuHideCredits();
-    menuHideInstructions();
-    menuHideLevelSelect();
-    menuHideOptions();
-    menuHideTechnicalInfo();
-    menuHideGameOver();
-    menuHideWelcome();
+    menuCredits.hide();
+    menuInstructions.hide();
+    menuLevelSelect.hide();
+    menuOptions.hide();
+    menuTechnicalInfo.hide();
+    menuGameOver.hide();
     if (displayMenuImage) {
         menuImage.style.display = 'flex'
     }
-    menuMain.style.display = 'flex';
+    menuMain.show();
 }
 function menuHideMain() {
-    menuMain.style.display = 'none';
+    menuMain.hide();
 }
 function menuShowInstructions() {
-    menuHideMain()
-    menuInstructions.style.display = 'flex';
-}
-function menuHideInstructions() {
-    menuInstructions.style.display = 'none';
+    menuMain.hide();
+    menuInstructions.show();
 }
 function menuShowOptions() {
-    menuHideMain()
-    menuOptions.style.display = 'flex';
-}
-function menuHideOptions() {
-    menuOptions.style.display = 'none';
+    menuMain.hide();
+    menuOptions.show();
 }
 function menuShowLevelSelect() {
-    menuHideMain()
-    menuLevelSelect.style.display = 'flex';
-}
-function menuHideLevelSelect() {
-    menuLevelSelect.style.display = 'none';
+    menuMain.hide();
+    menuLevelSelect.show();
 }
 function menuShowCredits() {
-    menuHideMain()
-    menuCredits.style.display = 'flex';
-}
-function menuHideCredits() {
-    menuCredits.style.display = 'none';
+    menuMain.hide();
+    menuCredits.show();
 }
 function menuShowTechnicalInfo() {
-    menuHideMain()
-    menuTechnicalInfo.style.display = 'flex';
-}
-function menuHideTechnicalInfo() {
-    menuTechnicalInfo.style.display = 'none';
-}
-function menuHideGameOver() {
-    menuHideMain()
-    gameOverMenu.style.display = 'none';
-}
-function menuShowWelcome() {
-    menuImage.style.display = 'none'
-    menuWelcome.style.display = 'flex';
-}
-function menuHideWelcome() {
-    menuWelcome.style.display = 'none'
-    musicMenu.play();
+    menuMain.hide();
+    menuTechnicalInfo.show();
 }
