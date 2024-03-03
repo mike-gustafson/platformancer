@@ -9,14 +9,14 @@ import { movePlayer } from './js/movePlayer.js';
 import { Menu } from './js/classes/menu.js';
 import { Player } from './js/classes/player.js';
 import { Platform } from './js/classes/platform.js';
+import { LevelExit } from './js/classes/levelExit.js';
 
-let levelExit;
 let trianglesCurrentPosition = 0;
 let triangles = [];
 let trianglePeakMaxHeight = innerHeight/2;
 let trianglePeakMinHeight = innerHeight/1.5;
 let trianglesBackup = [];
-
+let levelExit
 let clouds = [];
 let cloudX = 0;
 let cloudY = 200;
@@ -106,36 +106,6 @@ let keys = {
     }
 }
 
-class LevelExit {
-    constructor(x, y, width, height) {
-        this.initialPosition = { x, y };
-        this.position = { ...this.initialPosition};
-        this.width = width;
-        this.height = height;
-    }
-
-    create() {
-        context.fillStyle = 'green'; // You can set the color to whatever you prefer
-        context.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
-    update() {
-        this.create()
-        this.position.x = Math.round(this.position.x);
-        if (
-            (player.position.x <= 100 && player.inLevelXPosition.x >= 100) ||
-            (player.inLevelXPosition.x < levelWidth && player.position.x >= innerWidth / 2)
-        ) {
-            if (player.velocity.x !== 0){
-                this.position.x -= player.velocity.x;
-            }
-        }
-    }
-    reset() {
-        this.position = this.initialPosition;
-        this.create()
-    }
-}
-
 // INPUT EVENT LISTENERS--------------------------------------------------------------
 onload = function() {
     for(var i = 0; i < menuNavToMain.length; i++) {
@@ -186,7 +156,7 @@ const loop = function() {
     drawTriangles();
     drawClouds();
     player.update(gravity, context);
-    levelExit.update();
+    levelExit.update(context, player, levelWidth, innerWidth);
     drawScore();
     platforms.forEach(platform => {
         platform.update(context, player, levelWidth);
