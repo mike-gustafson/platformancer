@@ -1,10 +1,7 @@
-# Platformancer
+# Platformancer <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"><img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
 
-### A JavaScript an HTML Canvas based platformer game
+### <a href="https://mike-gustafson.github.io/platformancer/" style="color: yellow;">Click here to play now on GitHub Pages!</a>
 
-## Play it right now on GitHub Pages!
-
-https://mike-gustafson.github.io/platformancer/
 
 ## Controls
 
@@ -14,9 +11,6 @@ Use the [a] to move left, [d] to move right.  The [spacebar] will make you jump.
 This project showcases the abilities of HTML5 canvas and JavaScript.  The JavaScaript renders all items on screen and the player jumps a box from platform to platform in classic fashion.  The goal is to get to an exit on the right side of the level.  The graphics and design were kept simple to allow more time and effort into the control setup and smoothness of gameplay.
 
 ![Alt text](image.png)
-## Technologies Used:
-
-### HTML5 | JavaScript | CSS
 
 ## Installation Instructions:
 - open your terminal and navigate to the folder you want  the project located in.
