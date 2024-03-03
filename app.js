@@ -7,6 +7,7 @@ import { movePlayer } from './js/movePlayer.js';
 import { createClouds } from './js/createClouds.js';
 import { createTriangles } from './js/createTriangles.js';
 import { drawClouds } from './js/drawClouds.js';
+import { drawPlayerLives } from './js/drawPlayerLives.js';
 import { drawScore } from './js/drawScore.js';
 // class imports
 import { Menu } from './js/classes/menu.js';
@@ -171,7 +172,7 @@ const loop = function() {
     platforms.forEach(platform => {
         platform.update(context, player, levelWidth);
     })
-    drawPlayerLives();
+    drawPlayerLives(playerLives, context);
     isPlayerOnAPlatform();
     isPlayerOnTheGround();
     isPlayerAtEndOfLevel();
@@ -249,14 +250,7 @@ function menuStartGame() {
     backgroundMusic.play();
     window.requestAnimationFrame(loop)
 }
-function drawPlayerLives() {
-    for (let i = 0; i < playerLives; i++) {
-        let x = 180 - (i * 40);
-        let y = 20;
-        context.fillStyle = 'firebrick';
-        context.fillRect(x, y, 32, 32);
-    }
-}
+
 function isPlayerOnAPlatform() {
     for (let platform of platforms) {
         if (
