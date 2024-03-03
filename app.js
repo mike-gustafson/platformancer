@@ -302,14 +302,6 @@ function generatePlatforms() {
     return initialPlatformData;
 }
 
-// function addPoints(platform) {
-//     if (!scoredPlatforms.has(platform)){
-//         scoreTotal +=  10;
-//         scoreThisLife += 10;
-//         scoredPlatforms.add(platform);
-//     }
-// }
-
 function gameOver() {
     backgroundMusic.pause()
     soundGameOver.play()
@@ -368,7 +360,7 @@ function isPlayerOnAPlatform() {
             scoredPlatforms = addPointsResults.scoredPlatforms;
             scoreTotal = addPointsResults.scoreTotal;
             scoreThisLife = addPointsResults.scoreThisLife;
-            
+
                         return true;
         }
     }
