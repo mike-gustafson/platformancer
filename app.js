@@ -15,6 +15,7 @@ import { drawPlayerLives } from './js/drawPlayerLives.js';
 
 // collision detection imports
 import { isPlayerAtEndOfLevel } from './js/collisionDetection/isPlayerAtEndOfLevel.js';
+import { keepPlayerOnTheScreen } from './js/collisionDetection/keepPlayerOnTheScreen.js';
 
 // level exit imports
 import { findLastPlatformY } from './js/findLastPlatformY.js';
@@ -73,7 +74,6 @@ let levelWidth = 10000;
 let scoredPlatforms = new Set();
 
 let endPortalX = levelWidth;
-let endPortalY;
 let endPortalWidth = 40;
 let endPortalHeight = 100;
 
@@ -195,7 +195,7 @@ const loop = function() {
 
     // move player
     player = movePlayer(player, keys, speed, friction)
-    keepPlayerOnTheScreen();
+    player = keepPlayerOnTheScreen(player, levelWidth, playerStartingXPosition);
 
     // check if menu is displayed
     if (isMenuDisplayed) {
@@ -294,28 +294,11 @@ function isPlayerOnTheGround() {
         }
     }
 }
-function keepPlayerOnTheScreen() {
-    if (player.inLevelXPosition.x > levelWidth) {
-        player.inLevelXPosition.x = levelWidth
-    }
-    if (player.inLevelXPosition.x < 0) {
-        player.inLevelXPosition.x = playerStartingXPosition;
-    }
-    if (player.inLevelXPosition.x < levelWidth) {
-        player.inLevelXPosition.x += player.velocity.x;
-    }
-    if (player.position.x < 100) {
-        player.position.x = 100
-    } else if (player.position.x > innerWidth/2) {
-        player.position.x = innerWidth/2 
-    }
-}
-
 function createGameAssets() {
     player = new Player
     playerStartingXPosition = player.position.x
     platforms = generatePlatforms();
-    endPortalY = findLastPlatformY(platforms, endPortalHeight)
+    let endPortalY = findLastPlatformY(platforms, endPortalHeight)
     levelExit = new LevelExit(endPortalX, endPortalY, endPortalWidth, endPortalHeight);
     triangles = createTriangles(levelWidth, trianglePeakMinHeight, trianglePeakMaxHeight, trianglesCurrentPosition);
     clouds = createClouds(levelWidth, clouds)
