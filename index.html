@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name = "viewport" content = "width=device-width">
+    <title>platformancer</title>
+    <link href = "style.css" rel = "stylesheet" type = "text/css">
+</head>
+  <body>
+  <div id="menu-container" class="menu-container">
+    <div id="welcome-menu" class="menu">
+      <h1>Platformancer</h1>
+      <hr>
+      Welcome to Platformancer!<br>
+      This game demonstrates the power<br>
+      of JavaScript and HTML5 canvas working together to bring you a complete gaming experience.<br>
+      <br>
+      click below to get started<br>
+      <h3 class="navigate-to-main-menu menu-item">Enter the Game</h3>
+    </div>
+    <div id="start-menu" class="menu">
+      <h1>Platformancer</h1>
+      <hr>
+      <h3 id="start-button" class="menu-item">START GAME</h3>
+      <h3 id="nav-to-instructions" class="menu-item">INSTRUCTIONS</h3>
+      <h3 id="nav-to-options" class="menu-item">OPTIONS</h3>
+      <h3 id="nav-to-level-select" class="menu-item">LEVEL SELECT</h3>
+      <h3 id="nav-to-credits" class="menu-item">CREDITS</h3>
+      <h3 id="nav-to-technical-info" class="menu-item">TECHNICAL INFO</h3>
+      </ul>
+    </div>
+    <div id="instructions-menu" class="menu">     
+      <h1>Instructions</h1>
+      Make it to the end of the level by jumping from platform to platform.  Points are awarded for each platform that you land on.
+      <hr>
+      <h3>Controls</h3>
+      <ul>
+        <li><div class="key" type="button"><span class="text">A</span></div> move left 
+        <li><div class="key" type="button"><span class="text">D</span></div> move right
+        <li><div class="key space" type="button"><span class="text space">SPACE</span></div> jump
+      </ul>
+      <hr>
+      <h3 class="navigate-to-main-menu menu-item">RETURN TO MAIN MENU</h3>
+    </div>
+    <div id="options-menu" class="menu">
+      <h1>Options</h1>
+      ---not implemented yet---<br>
+      sound on/off<br>
+      music on/off<br>
+      adjust window to optimal size
+      <hr>
+      <h3 class="navigate-to-main-menu menu-item">RETURN TO MAIN MENU</h3>
+    </div>
+    <div id="level-select-menu" class="menu">
+      <h1>Level Select</h1>
+      ---not implemented yet---<br>
+      there is currently only one level
+      <h3 class="navigate-to-main-menu menu-item">RETURN TO MAIN MENU</h3>
+    </div>
+    <div id="credits-menu" class="menu">
+      <h1>Credits</h1>
+      Concept/Development: <b>Mike Gustafson</b><br>
+      Background track: <a href="https://www.jamendo.com/track/2060643/background-hip-hop-funk">Kirill Kharchenko - Background Hip-Hop Funk</a><br>
+      
+
+      <h3 class="navigate-to-main-menu menu-item">RETURN TO MAIN MENU</h3>
+    </div>
+    <div id="technical-info-menu" class="menu">
+      <h1>Technical Info</h1>
+      The game is light on graphics.  Everything you see is rendered inside the HTML canvas element via JavaScript.
+      <hr>
+      The JavaScript is pure vanilla. No libraries were used in creating it.
+      
+      <h3 class="navigate-to-main-menu menu-item">RETURN TO MAIN MENU</h3>
+    </div>
+    <div  id="game-over-menu" class="menu">
+      <h1>GAME OVER</h1><br>
+      You're final score was:<span id="final-score"></span><br>
+      <h3 id="restart-button" class="menu-item">PLAY AGAIN</h3>
+      <h3 class="navigate-to-main-menu menu-item">RETURN TO MAIN MENU</h3>
+    </div>
+    <div id="image"><img src="image.png"></div>
+  </div>
+  
+  
+
+  <canvas id="mainLayer"></canvas>
+
+  <script src="./app.js" type="module"></script>
+  <script type="module" src="./level-01.js"></script>
+</body>
+
+</html>
