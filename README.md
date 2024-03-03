@@ -8,7 +8,7 @@ https://mike-gustafson.github.io/platformancer/
 
 ## Controls
 
-User the left and right arrow keys on your weyboard to move left and right.  The spacebar will make you jump. 
+Use the [a] to move left, [d] to move right.  The [spacebar] will make you jump. 
 
 ## Introduction:
 This project showcases the abilities of HTML5 canvas and JavaScript.  The JavaScaript renders all items on screen and the player jumps a box from platform to platform in classic fashion.  The goal is to get to an exit on the right side of the level.  The graphics and design were kept simple to allow more time and effort into the control setup and smoothness of gameplay.
