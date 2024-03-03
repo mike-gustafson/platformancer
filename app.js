@@ -7,6 +7,7 @@ import { movePlayer } from './js/movePlayer.js';
 
 // class imports
 import { Menu } from './js/classes/menu.js';
+import { Player } from './js/classes/player.js';
 
 let levelExit;
 let trianglesCurrentPosition = 0;
@@ -41,9 +42,6 @@ const menuNavToTechnicalInfo = document.getElementById('nav-to-technical-info');
 const startButton = document.getElementById('start-button');
 const finalScoreText = document.getElementById('final-score');
 const restartButton = document.getElementById('restart-button');
-
-
-
 
 // player variables
 let player;
@@ -104,37 +102,6 @@ let keys = {
     },
     left: {
         pressed: false
-    }
-}
-
-// player constructor
-class Player {
-    constructor() {
-        this.position = {
-            x: 180,
-            y: 20
-        }
-        this.inLevelXPosition = {
-            x: 180
-        }
-        this.velocity = {
-            x: 0,
-            y: 0
-        }
-        this.width = 32
-        this.height = 32
-        this.jumping = false;
-    }
-    create() {
-        context.fillStyle = 'firebrick'
-        context.fillRect(this.position.x, this.position.y, this.width, this.height);
-        context.strokeStyle = '#666666';
-    }
-    update() {
-        this.create();
-        this.position.x = Math.round(this.position.x);
-        this.position.y += this.velocity.y;
-        this.velocity.y += gravity;
     }
 }
 
@@ -246,7 +213,7 @@ const loop = function() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawTriangles();
     drawClouds();
-    player.update();
+    player.update(gravity, context);
     levelExit.update();
     drawScore();
     platforms.forEach(platform => {
@@ -415,7 +382,7 @@ function createGameAssets() {
     createTriangles();
     clouds = []
     createClouds()
-    player.create()
+    player.create(context)
 }
 function createTriangles(){
     let lastPosition;
