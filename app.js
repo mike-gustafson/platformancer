@@ -1,4 +1,9 @@
+// level imports
 import level01Platforms from './levels/level-01.js';
+
+// function imports
+import { addPoints } from './js/addPoints.js';
+
 let levelExit;
 let trianglesCurrentPosition = 0;
 let triangles = [];
@@ -11,52 +16,64 @@ let cloudX = 0;
 let cloudY = 200;
 let cloudsBackup = [];
 
+// canvas setup
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 // menu
-const menuContainer = document.getElementById('menu-container');
-const menuWelcome = document.getElementById('welcome-menu');
-const menuMain = document.getElementById('start-menu');
-const menuInstructions = document.getElementById('instructions-menu');
-const menuOptions = document.getElementById('options-menu');
-const menuLevelSelect = document.getElementById('level-select-menu');
-const menuCredits = document.getElementById('credits-menu');
-const menuTechnicalInfo = document.getElementById('technical-info-menu');
-const menuNavToInstructions = document.getElementById('nav-to-instructions');
-const menuNavToOptions = document.getElementById('nav-to-options');
-const menuNavToLevelSelect = document.getElementById('nav-to-level-select');
-const menuNavToCredits = document.getElementById('nav-to-credits');
-const menuNavToTechnicalInfo = document.getElementById('nav-to-technical-info');
-const menuNavToMain = document.getElementsByClassName('navigate-to-main-menu');
+let isMenuDisplayed = true;
+let displayMenuImage = true;
+
 const menuImage = document.getElementById('image');
-menuNavToInstructions.addEventListener('click', menuShowInstructions);
-menuNavToOptions.addEventListener('click', menuShowOptions);
-menuNavToLevelSelect.addEventListener('click', menuShowLevelSelect);
-menuNavToCredits.addEventListener('click', menuShowCredits);
-menuNavToTechnicalInfo.addEventListener('click', menuShowTechnicalInfo);
+const menuMain = document.getElementById('start-menu');
+const menuWelcome = document.getElementById('welcome-menu');
+const menuOptions = document.getElementById('options-menu');
+const menuCredits = document.getElementById('credits-menu');
+const menuContainer = document.getElementById('menu-container');
+const menuNavToOptions = document.getElementById('nav-to-options');
+const menuNavToCredits = document.getElementById('nav-to-credits');
+const menuLevelSelect = document.getElementById('level-select-menu');
+const menuInstructions = document.getElementById('instructions-menu');
+const menuTechnicalInfo = document.getElementById('technical-info-menu');
+const menuNavToLevelSelect = document.getElementById('nav-to-level-select');
+const menuNavToInstructions = document.getElementById('nav-to-instructions');
+const menuNavToMain = document.getElementsByClassName('navigate-to-main-menu');
+const menuNavToTechnicalInfo = document.getElementById('nav-to-technical-info');
+
 const startButton = document.getElementById('start-button');
-const restartButton = document.getElementById('restart-button');
-const gameOverMenu = document.getElementById('game-over-menu');
 const finalScoreText = document.getElementById('final-score');
+const gameOverMenu = document.getElementById('game-over-menu');
+const restartButton = document.getElementById('restart-button');
+
 startButton.addEventListener('click', menuStartGame);
 restartButton.addEventListener('click', menuStartGame);
+menuNavToOptions.addEventListener('click', menuShowOptions);
+menuNavToCredits.addEventListener('click', menuShowCredits);
+menuNavToLevelSelect.addEventListener('click', menuShowLevelSelect);
+menuNavToInstructions.addEventListener('click', menuShowInstructions);
+menuNavToTechnicalInfo.addEventListener('click', menuShowTechnicalInfo);
 
 
-let PlayerStartingLives = 3;
-let playerLives = PlayerStartingLives;
+
+// player variables
+let player;
+let playerLanded = false;
+let playerStartingXPosition;
+let playerStartingLives = 3;
+let playerLives = playerStartingLives;
+
+// score variables
 const scorePositionX = canvas.width / 2;
 const scorePositionY = 50;
 let scoreTotal = 0;
 let scoreThisLife = 0;
-let levelWidth = 10000;
-let playerLanded = false;
-let playerStartingXPosition;
+
+// level variables
 let platforms;
-const scoredPlatforms = new Set();
-let player;
+let levelWidth = 10000;
+let scoredPlatforms = new Set();
 
 let endOfLevel = levelWidth;
 let endPortalX = levelWidth - 48;
@@ -65,14 +82,15 @@ let endPortalWidth = 48;
 let endPortalHeight = 100;
 
 // Sounds
+const musicMenu = new Audio("sounds/Funk'e'Tony_-_Funkafe.mp3");
 const soundPlayerLanding = new Audio('sounds/332661__reitanna__big-thud.wav');
 const soundPlayerJumping = new Audio('sounds/399095__plasterbrain__8bit-jump.wav');
 const soundGameOver = new Audio('sounds/362204__taranp__horn_fail_wahwah_3.wav');
 const backgroundMusic = new Audio('sounds/Kirill_Kharchenko_-_Background_Hip-Hop_Funk.mp3');
-const musicMenu = new Audio("sounds/Funk'e'Tony_-_Funkafe.mp3");
-let isMenuDisplayed = true;
-let displayMenuImage = true;
+
+
 menuShowWelcome();
+
 // Physics Variables
 let friction = .7;
 let gravity = 1.3;
@@ -160,7 +178,6 @@ class LevelExit {
     update() {
         this.create()
         this.position.x = Math.round(this.position.x);
-
         if (
             (player.position.x <= 100 && player.inLevelXPosition.x >= 100) ||
             (player.inLevelXPosition.x < levelWidth && player.position.x >= innerWidth / 2)
@@ -175,23 +192,23 @@ class LevelExit {
         this.create()
     }
 }
+
 // INPUT EVENT LISTENERS--------------------------------------------------------------
 onload = function() {
     for(var i = 0; i < menuNavToMain.length; i++) {
         let eachOne = menuNavToMain[i];
         eachOne.onclick = function() {
-            menuShowMain()
+            menuShowMain();
         }
     }
 }
+
 addEventListener('keydown', ({ keyCode }) => {
         switch (keyCode) {
-            case 65:
-                keys.left.pressed = true
-                break;
-            case 68:
-                keys.right.pressed = true    
-                    break;
+            case 65: keys.left.pressed = true
+            break;
+            case 68: keys.right.pressed = true    
+            break;
             case 32:
                 if (!player.jumping) {
                     if (isPlayerOnAPlatform()) {
@@ -204,6 +221,7 @@ addEventListener('keydown', ({ keyCode }) => {
                 break;
         }
     });
+
 addEventListener('keyup', ({ keyCode }) => {
     switch (keyCode) {
         case 65:
@@ -220,7 +238,6 @@ addEventListener('keyup', ({ keyCode }) => {
 });
 
 // GAME LOOP -------------------------------------------------------------------------
-
 const loop = function() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawTriangles();
@@ -284,13 +301,15 @@ function generatePlatforms() {
     initialPlatformData.push(levelExitPlatform);
     return initialPlatformData;
 }
-function addPoints(platform) {
-    if (!scoredPlatforms.has(platform)){
-        scoreTotal +=  10;
-        scoreThisLife += 10;
-        scoredPlatforms.add(platform);
-    }
-}
+
+// function addPoints(platform) {
+//     if (!scoredPlatforms.has(platform)){
+//         scoreTotal +=  10;
+//         scoreThisLife += 10;
+//         scoredPlatforms.add(platform);
+//     }
+// }
+
 function gameOver() {
     backgroundMusic.pause()
     soundGameOver.play()
@@ -309,7 +328,7 @@ function menuStartGame() {
     menuHide()
     resetScores()
     endPortalY = findLastPlatformY()
-    playerLives = PlayerStartingLives
+    playerLives = playerStartingLives
     levelExit = new LevelExit(levelWidth - 40, 300, 40, 100);
     backgroundMusic.play();
     window.requestAnimationFrame(loop)
@@ -344,8 +363,13 @@ function isPlayerOnAPlatform() {
             }
             player.position.y = platform.position.y - player.height;
             player.velocity.y = 0
-            addPoints(platform)
-            return true;
+            
+            let addPointsResults = addPoints(platform, scoredPlatforms, scoreTotal, scoreThisLife);
+            scoredPlatforms = addPointsResults.scoredPlatforms;
+            scoreTotal = addPointsResults.scoreTotal;
+            scoreThisLife = addPointsResults.scoreThisLife;
+            
+                        return true;
         }
     }
     return false;
