@@ -5,6 +5,8 @@ import level01Platforms from './levels/level-01.js';
 import { random } from './js/utils.js';
 import { addPoints } from './js/addPoints.js';
 import { movePlayer } from './js/movePlayer.js';
+import { createClouds } from './js/createClouds.js';
+import { createTriangles } from './js/createTriangles.js';
 
 // class imports
 import { Menu } from './js/classes/menu.js';
@@ -13,15 +15,13 @@ import { Platform } from './js/classes/platform.js';
 import { LevelExit } from './js/classes/levelExit.js';
 
 let trianglesCurrentPosition = 0;
-let triangles = [];
 let trianglePeakMaxHeight = innerHeight/2;
 let trianglePeakMinHeight = innerHeight/1.5;
-let trianglesBackup = [];
 let levelExit
+let triangles = [];
 let clouds = [];
 let cloudX = 0;
 let cloudY = 200;
-let cloudsBackup = [];
 
 // canvas setup
 const canvas = document.querySelector('canvas');
@@ -320,27 +320,9 @@ function createGameAssets() {
     playerStartingXPosition = player.position.x
     platforms = generatePlatforms();
     levelExit = new LevelExit(levelWidth - 40, 300, 40, 100);
-    createTriangles();
-    clouds = []
-    createClouds()
+    triangles = createTriangles(levelWidth, trianglePeakMinHeight, trianglePeakMaxHeight, trianglesCurrentPosition);
+    clouds = createClouds(levelWidth, clouds)
     player.create(context)
-}
-function createTriangles(){
-    let lastPosition;
-    let a;
-    let b;
-    let c;
-    let cXOffset;
-    while (trianglesCurrentPosition < levelWidth) {
-        a = trianglesCurrentPosition;
-        lastPosition = trianglesCurrentPosition;
-        c = random(trianglePeakMinHeight, trianglePeakMaxHeight)
-        b = c/2 + trianglesCurrentPosition;
-        cXOffset = lastPosition+(b-a)/2
-        triangles.push({a, b, c, cXOffset})
-        trianglesCurrentPosition = b
-    }
-    trianglesBackup = triangles;
 }
 function drawTriangles() {
     for (let i = 0; i < triangles.length; i++) {        
@@ -366,14 +348,7 @@ function drawTriangles() {
         context.fill();
     }
 } 
-function createClouds() {
-    let cloudX = 0;
-    while (cloudX < levelWidth) {
-        clouds.push({x: random(100,500)+cloudX,y: random(200, 400)});
-        cloudX = cloudX + random(100,500);
-    }
-    cloudsBackup = clouds;
-}
+
 function drawClouds() {    
     for (let i = 0; i < clouds.length; i++){
         if (
