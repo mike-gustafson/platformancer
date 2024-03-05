@@ -20,7 +20,7 @@ export class Player {
         }
         this.width = 32
         this.height = 32
-        this.jumping = false;
+        this.jumping = false
     }
 
     create(context) {

@@ -6,9 +6,10 @@
 // Subcategory: Player Lives
 
 export function playerDied(playerLives) {
-    if (playerLives >= 0) {
-        return true;
+    let livesRemaining = playerLives - 1;
+    if (livesRemaining < 0) {
+        return { alive: false, lives: 0 }
     } else {
-        return false;
+        return { alive: true, lives: livesRemaining }
     }
 }

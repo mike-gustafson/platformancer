@@ -40,8 +40,10 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 // menu
-const menuImage = document.getElementById('image');
+let isMenuDisplayed = true;
+let displayMenuImage = true;
 
+const menuImage = document.getElementById('image');
 const menuNavToOptions = document.getElementById('nav-to-options');
 const menuNavToCredits = document.getElementById('nav-to-credits');
 const menuNavToLevelSelect = document.getElementById('nav-to-level-select');
@@ -134,39 +136,7 @@ onload = function() {
     }
 }
 
-addEventListener('keydown', ({ keyCode }) => {
-        switch (keyCode) {
-            case 65: keys.left.pressed = true
-            break;
-            case 68: keys.right.pressed = true    
-            break;
-            case 32:
-                if (!player.jumping) {
-                    if (isPlayerOnAPlatform()) {
-                        player.velocity.y = -20;
-                        player.jumping = true
-                        playerLanded = false
-                        soundPlayerJumping.play();
-                    }
-                }
-                break;
-        }
-    });
-
-addEventListener('keyup', ({ keyCode }) => {
-    switch (keyCode) {
-        case 65:
-            keys.left.pressed = false
-            break;
-        case 32:
-            if (!player.jumping) {
-            }
-            break;
-        case 68:
-            keys.right.pressed = false            
-            break;
-    }
-});
+import { setupKeyboardEvents } from './js/eventListeners/keyboardEvents.js';
 
 // GAME LOOP -------------------------------------------------------------------------
 const loop = function() {
@@ -229,20 +199,26 @@ function gameOver() {
     soundGameOver.play()
     menuContainer.show();
     showMenu(menuGameOver);
+    isMenuDisplayed = true
     musicMenu.play()
+    if (displayMenuImage) {
+        menuImage.style.display = 'flex'
+    }
     finalScoreText.textContent = `${scoreTotal}`
+    isMenuDisplayed = true
 }
 
 function startGame() {
     createGameAssets()
     menuContainer.hide();
-    menuImage.style.display = 'none';
-    musicMenu.pause();
+    isMenuDisplayed = false
+    displayMenuImage = false
+    musicMenu.pause()
     scoreThisLife = 0;
-    scoreTotal = 0;
-    playerLives = playerStartingLives;
+    scoreTotal = 0
+    playerLives = playerStartingLives
     backgroundMusic.play();
-    window.requestAnimationFrame(loop);
+    window.requestAnimationFrame(loop)
 }
 
 function isPlayerOnAPlatform() {
@@ -271,20 +247,20 @@ function isPlayerOnAPlatform() {
 }
 
 function createGameAssets() {
-    player         = new Player
-    let endPortalY = findLastPlatformY(platforms, endPortalHeight)
-    platforms      = generatePlatforms(level, innerHeight, levelWidth);
-    levelExit      = new LevelExit(endPortalX, endPortalY, endPortalWidth, endPortalHeight);
-    triangles      = createTriangles(levelWidth, trianglePeakMinHeight, trianglePeakMaxHeight, trianglesCurrentPosition);
-    clouds         = createClouds(levelWidth, clouds)
-
+    player = new Player
     playerStartingXPosition = player.position.x
-
+    platforms = generatePlatforms(level, innerHeight, levelWidth);
+    let endPortalY = findLastPlatformY(platforms, endPortalHeight)
+    levelExit = new LevelExit(endPortalX, endPortalY, endPortalWidth, endPortalHeight);
+    triangles = createTriangles(levelWidth, trianglePeakMinHeight, trianglePeakMaxHeight, trianglesCurrentPosition);
+    clouds = createClouds(levelWidth, clouds)
     player.create(context)
+
+    // create event listeners
+    setupKeyboardEvents(player, keys, soundPlayerJumping, isPlayerOnAPlatform)
 }
 
 function showMenu(requestedMenu) {
     allMenus.forEach(menu => menu.hide());
-    menuImage.style.display = 'flex';
     requestedMenu.show();
 }
