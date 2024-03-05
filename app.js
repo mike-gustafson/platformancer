@@ -40,10 +40,8 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 // menu
-let isMenuDisplayed = true;
-let displayMenuImage = true;
-
 const menuImage = document.getElementById('image');
+
 const menuNavToOptions = document.getElementById('nav-to-options');
 const menuNavToCredits = document.getElementById('nav-to-credits');
 const menuNavToLevelSelect = document.getElementById('nav-to-level-select');
@@ -80,8 +78,8 @@ let endPortalHeight = 100;
 // Sounds
 const musicMenu = new Audio("sounds/Funk'e'Tony_-_Funkafe.mp3");
 const soundPlayerLanding = new Audio('sounds/332661__reitanna__big-thud.wav');
-const soundPlayerJumping = new Audio('sounds/399095__plasterbrain__8bit-jump.wav');
 const soundGameOver = new Audio('sounds/362204__taranp__horn_fail_wahwah_3.wav');
+const soundPlayerJumping = new Audio('sounds/399095__plasterbrain__8bit-jump.wav');
 const backgroundMusic = new Audio('sounds/Kirill_Kharchenko_-_Background_Hip-Hop_Funk.mp3');
 
 const menuMain = new Menu('start-menu');
@@ -96,8 +94,8 @@ const menuTechnicalInfo = new Menu('technical-info-menu');
 
 const allMenus = [menuMain, menuWelcome, menuOptions, menuCredits, menuGameOver, menuLevelSelect, menuInstructions, menuTechnicalInfo];
 
-startButton.addEventListener('click', menuStartGame);
-restartButton.addEventListener('click', menuStartGame);
+startButton.addEventListener('click', startGame);
+restartButton.addEventListener('click', startGame);
 menuNavToOptions.addEventListener('click', () => showMenu(menuOptions));
 menuNavToCredits.addEventListener('click', () => showMenu(menuCredits));
 menuNavToLevelSelect.addEventListener('click', () => showMenu(menuLevelSelect));
@@ -231,27 +229,20 @@ function gameOver() {
     soundGameOver.play()
     menuContainer.show();
     showMenu(menuGameOver);
-    isMenuDisplayed = true
     musicMenu.play()
-    if (displayMenuImage) {
-        menuImage.style.display = 'flex'
-    }
     finalScoreText.textContent = `${scoreTotal}`
-    isMenuDisplayed = true
 }
 
-function menuStartGame() {
+function startGame() {
     createGameAssets()
-    menuMain.hide();
     menuContainer.hide();
-    isMenuDisplayed = false
-    displayMenuImage = false
-    musicMenu.pause()
+    menuImage.style.display = 'none';
+    musicMenu.pause();
     scoreThisLife = 0;
-    scoreTotal = 0
-    playerLives = playerStartingLives
+    scoreTotal = 0;
+    playerLives = playerStartingLives;
     backgroundMusic.play();
-    window.requestAnimationFrame(loop)
+    window.requestAnimationFrame(loop);
 }
 
 function isPlayerOnAPlatform() {
@@ -280,17 +271,20 @@ function isPlayerOnAPlatform() {
 }
 
 function createGameAssets() {
-    player = new Player
-    playerStartingXPosition = player.position.x
-    platforms = generatePlatforms(level, innerHeight, levelWidth);
+    player         = new Player
     let endPortalY = findLastPlatformY(platforms, endPortalHeight)
-    levelExit = new LevelExit(endPortalX, endPortalY, endPortalWidth, endPortalHeight);
-    triangles = createTriangles(levelWidth, trianglePeakMinHeight, trianglePeakMaxHeight, trianglesCurrentPosition);
-    clouds = createClouds(levelWidth, clouds)
+    platforms      = generatePlatforms(level, innerHeight, levelWidth);
+    levelExit      = new LevelExit(endPortalX, endPortalY, endPortalWidth, endPortalHeight);
+    triangles      = createTriangles(levelWidth, trianglePeakMinHeight, trianglePeakMaxHeight, trianglesCurrentPosition);
+    clouds         = createClouds(levelWidth, clouds)
+
+    playerStartingXPosition = player.position.x
+
     player.create(context)
 }
 
 function showMenu(requestedMenu) {
     allMenus.forEach(menu => menu.hide());
+    menuImage.style.display = 'flex';
     requestedMenu.show();
 }
