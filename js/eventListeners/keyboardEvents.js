@@ -7,7 +7,6 @@
 
 // keyboardEvents.js
 export function setupKeyboardEvents(player, keys, soundPlayerJumping, isPlayerOnAPlatform) {
-    console.log(player)
     addEventListener('keydown', ({ keyCode }) => {
         switch (keyCode) {
             case 65: keys.left.pressed = true; break;
