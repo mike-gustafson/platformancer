@@ -27,7 +27,7 @@ No local installation needed.
 
 ## Approach Taken:
 
-    The game is entirely done using HTML canvas and vanilla JavaScript.  Except for the pop-up 
+    The game is entirely done using HTML canvas and Vanilla JavaScript.  Except for the pop-up 
     menu, all the lifting is done in the JavaScript files. There are no pre-rendered 
     graphics used to keep the experience as clean and smooth as possible.  Using strictly 
     canvas elements allowed for much more focus on the physics and gameplay during development 
@@ -37,6 +37,7 @@ No local installation needed.
 
 ## Code snippets with explanation of code:
 The following section is the core part of making the platforms scroll when the player reaches a certain point on the screen. 
+
 ```javascript 
 update() {
         this.create()
@@ -52,7 +53,9 @@ update() {
         }
     }
 ```
+
 This is the core loop for the game.  As much as possible, I used function calls to keep everything simple and compartmentalized
+
 ```javascript 
 const loop = function() {
     context.clearRect(0, 0, canvas.width, canvas.height);
